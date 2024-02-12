@@ -1,0 +1,39 @@
+event "brushStart":
+    pattern: brush start
+    event-values: player, block
+    
+event "brush":
+    pattern: brush
+    event-values: player, block
+    
+event "brushStop":
+    pattern: brush stop
+    event-values: player, block
+
+on right click:
+    event-block is set
+    event-item is a brush
+    {-brushevent.brushing::%uuid of player%} is not set
+    StartBrush(player, event-block)
+
+local function StartBrush(p: player, b: block):
+    set {_v::player} to {_p}
+    set {_v::block} to {_b}
+    call custom event "brushStart" with values {_v::*}
+    set {-brushevent.brushing::%uuid of {_p}%} to {_b}
+
+    while (tool of {_p}) is a brush:
+        wait 5 ticks
+        set {_target} to hit block of (raytrace from {_p} with max distance 5)
+        if any:
+            (block at {_b}) != {_target}
+            {_p}.isHandRaised() = false
+        then:
+            if {_p}.isHandRaised() = true:
+                run 1 tick later:
+                    StartBrush({_p}, {_target})
+            stop loop
+        call custom event "brush" with values {_v::*}
+
+    call custom event "brushStop" with values {_v::*}
+    delete {-brushevent.brushing::%uuid of {_p}%}

@@ -1,0 +1,17 @@
+# Skript currently is half functional.
+
+function textBar(number: Number, max: Number, text: text, fillColor: Text, emptyColor: Text) :: Text:
+	set {_barCount} to length of {_text}
+	set {_progress} to {_number} / {_max} * 100
+	set {_progress} to 100 if {_progress} > 100
+	set {_barProgress} to 100 / {_barCount}
+	set {_t} to ""
+	set {_chars::*} to {_text} split at ""
+	loop {_barCount} times:
+		set {_barChar} to "|"
+		if {_progress} >= {_barProgress}:
+			remove {_barProgress} from {_progress}
+			set {_t} to colored "%{_t}%%{_fillColor}%%{_barChar}%"
+		else:
+			set {_t} to colored "%{_t}%%{_emptyColor}%%{_barChar}%"
+	return {_t}

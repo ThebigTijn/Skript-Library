@@ -1,0 +1,6 @@
+function font(t: text) :: text:
+	set {_text} to "a,ᴀ|b,ʙ|c,ᴄ|d,ᴅ|e,ᴇ|f,ꜰ|g,ɢ|h,ʜ|i,ɪ|j,ᴊ|k,ᴋ|l,ʟ|m,ᴍ|n,ɴ|o,ᴏ|p,ᴘ|q,ǫ|r,ʀ|s,s|t,ᴛ|u,ᴜ|v,ᴠ|w,ᴡ|x,x|y,ʏ|z,ᴢ"
+	loop split {_text} at "|":
+		set {_t::*} to split loop-value at ","
+		replace all {_t::1} with {_t::2} in {_t}
+	return {_t}
