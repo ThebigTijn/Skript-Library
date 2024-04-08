@@ -1,11 +1,14 @@
 # Skript Library
-Usefull skripts files used in most (populair) Skripts/Servers.
+Usefull skripts files used in my Skripts/Servers.
 
-Currently work in progress.
-
-I do not claim all skripts that are in this list. I will credit everyone that i can find.
+I do not claim all skripts that are in this list.
 
 ## Required Plugins:
-- Skript 2.7.3+
-- SKBee
-- Sk-Reflect
+- Skript 
+- SkBee
+- skript-reflect
+
+## Required Plugins (If mentioned):
+= skript-yaml
+
+### If you are no credited, LMK so i can add you.

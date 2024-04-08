@@ -1,0 +1,16 @@
+function nbtSet(p: player, key: string, obj: player):
+    set {_nbt} to nbt compound of {_p}
+    set {_c} to tag "custom" of {_nbt}
+    set tag {_key} of {_c} to {_obj}
+    set tag "custom" of {_nbt} to {_c}
+
+function nbtGet(p: player, key: string) :: player:
+    set {_nbt} to nbt compound of {_p}
+    set {_c} to tag "custom" of {_nbt}
+    return tag {_key} of {_c}
+ 
+function nbtDelete(p: player, key: string):
+    set {_nbt} to nbt compound of {_p}
+    set {_c} to tag "custom" of {_nbt}
+    delete tag {_key} of {_c}
+    set tag "custom" of {_nbt} to {_c}

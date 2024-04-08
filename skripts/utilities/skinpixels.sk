@@ -1,13 +1,37 @@
 import:
-	java.net.URL
-	javax.imageio.ImageIO
-	net.md_5.bungee.api.ChatColor
-	java.awt.Color
+    java.net.URL
+    javax.imageio.ImageIO
+    net.md_5.bungee.api.ChatColor
+    java.awt.Color
 
-function getSkinPixels(player: offline player, display.char: string="█") :: strings:
-	set {_image} to ImageIO.read(new URL("https://cravatar.eu/helmavatar/%{_player}'s uuid%/8.png"))
-	loop 8 times:
-		loop 8 times:
-			set {_line} to (loop-value-1 - 1)
-			set {_skin::%{_line}%} to join {_skin::%{_line}%} and "%ChatColor.of(new Color({_image}.getRGB(loop-value-2 - 1, {_line})))%█"
-	return {_skin::*}
+function return_Character(character: string, loopAmount: number) :: string:
+    set {_returnString} to ""
+    loop {_loopAmount} times:
+        set {_returnString} to "%{_returnString}%%{_character}%"
+    return {_returnString}
+
+# EXAMPLE USAGE
+
+#function join_Msg(p: player):
+#    loop 250 times:
+#        send " " to {_p}
+#    run section {-pixel} async with {_p} and store result in {_s::*} and wait
+#    set {_pixels::*} to {_s::*}
+#    set {_strings::*} to ("line 1", "line 2", "line 3", "line 4", "line 5", "line 6", "line 7" , "line 8")
+#    send "&8&m%return_Character(" " , 60)%" to {_p}
+#    loop {_pixels::*}:
+#        send "%loop-value% %{_strings::%floor(loop-index parsed as a number)%} ? ""%" to {_p}
+#    send "&8&m%return_Character(" " , 60)%" to {_p}
+
+on load:
+    create section with {_player} stored in {-pixel}:
+        set {_player} to "%{_player}%" parsed as a offline player
+        return {skin::%{_player}%::*} if {skin::%{_player}%::*} is set
+        set {_} to ""
+        set {_image} to ImageIO.read(new URL("https://mc-heads.net/avatar/%uuid of {_player}%/8"))
+        loop 8 times:
+            loop 8 times:
+                set {_line} to ((loop-value-1) - 1)
+                set {_skin::%{_line}%} to join {_skin::%{_line}%} and "%ChatColor.of(new Color({_image}.getRGB((loop-value-2) - 1, {_line})))%█"
+        set {skin::%{_player}%::*} to {_skin::*}
+        return {_skin::*}

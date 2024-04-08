@@ -1,17 +1,11 @@
-# Skript currently is half functional.
+# made by jakegblp (https://docs.skunity.com/snippets/1226587789471121450)
+# edited by Hibers
 
-function textBar(number: Number, max: Number, text: text, fillColor: Text, emptyColor: Text) :: Text:
-	set {_barCount} to length of {_text}
-	set {_progress} to {_number} / {_max} * 100
-	set {_progress} to 100 if {_progress} > 100
-	set {_barProgress} to 100 / {_barCount}
-	set {_t} to ""
-	set {_chars::*} to {_text} split at ""
-	loop {_barCount} times:
-		set {_barChar} to "|"
-		if {_progress} >= {_barProgress}:
-			remove {_barProgress} from {_progress}
-			set {_t} to colored "%{_t}%%{_fillColor}%%{_barChar}%"
-		else:
-			set {_t} to colored "%{_t}%%{_emptyColor}%%{_barChar}%"
-	return {_t}
+function textB(size:int,progress:num,max:num) :: text component:
+    set {_progress} to max({_progress},0)
+    set {_max} to max({_max},1)
+    if {_progress} = {_max}:
+        increase {_progress} and {_max} by 1
+    set {_ratio} to ({_progress}/{_max})
+    set {_completed} to round({_ratio}*{_size})
+    return minimessage from (join "<gradient:",("green:" repeated {_completed} times),("red:" repeated {_size}-{_completed} times),"0>%"|" repeated {_size} times%")

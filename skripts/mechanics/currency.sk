@@ -1,0 +1,16 @@
+# Made by Hibers, ThebigTijn
+
+function currencySet(p:player,type:string,n:num):
+    nbtSet({_p},{_type},{_n})
+
+function currencyGet(p:player,type:string) :: num:
+    return nbtGet({_p},{_type}) ? 0
+
+function currencyAdd(p:player,type:string,n:num):
+    currencySet({_p},{_type},(currencyGet({_p},{_type})+{_n}))
+
+function currencyRemove(p:player,type:string,n:num):
+    currencySet({_p},{_type},(currencyGet({_p},{_type})-{_n}))
+
+function currencyCheck(p:player,type:string,n:num) :: boolean:
+    return true if currencyGet({_p},{_type}) >= {_n} else false
