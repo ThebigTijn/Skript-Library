@@ -9,6 +9,6 @@ I do not claim all skripts that are in this list.
 - skript-reflect
 
 ## Required Plugins (If mentioned):
-= skript-yaml
+- skript-yaml
 
 ### If you are no credited, LMK so i can add you.
