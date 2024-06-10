@@ -1,0 +1,40 @@
+# NOT TESTED! should detect use of spyglass
+
+event "spyStart":
+    pattern: spy start
+    event-values: player, block
+    
+event "spy":
+    pattern: spy
+    event-values: player, block
+    
+event "spyStop":
+    pattern: spy stop
+    event-values: player, block
+
+on right click:
+    event-block is set
+    event-item is a spyglass
+    {-spyevent.spying::%uuid of player%} is not set
+    Startspy(player, event-block)
+
+local function Startspy(p: player, b: block):
+    set {_v::player} to {_p}
+    set {_v::block} to {_b}
+    call custom event "spyStart" with values {_v::*}
+    set {-spyevent.spying::%uuid of {_p}%} to {_b}
+
+    while (tool of {_p}) is a spy:
+        wait 20 ticks
+        set {_target} to hit block of (raytrace from {_p} with max distance 20)
+        if any:
+            {_p}.isHandRaised() = false
+        then:
+            if {_p}.isHandRaised() = true:
+                run 1 tick later:
+                    Startspy({_p}, {_target})
+            stop loop
+        call custom event "spy" with values {_v::*}
+
+    call custom event "spyStop" with values {_v::*}
+    delete {-spyevent.spying::%uuid of {_p}%}
