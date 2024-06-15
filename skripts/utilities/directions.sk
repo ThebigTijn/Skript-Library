@@ -1,0 +1,25 @@
+on load:
+	set {-vdirections::north} to vector(0, 0, -1)
+	set {-vdirections::east} to vector(1, 0, 0)
+	set {-vdirections::south} to vector(0, 0, 1)
+	set {-vdirections::west} to vector(-1, 0, 0)
+	set {-vdirections::up} to vector(0, 1, 0)
+	set {-vdirections::down} to vector(0, -1, 0)
+	set {-qdirections::south} to quaternion(0,0,0,0)
+	set {-qdirections::east} to quaternion(0,-0.70710677,0,-0.70710677)
+	set {-qdirections::north} to quaternion(0,1,0,0)
+	set {-qdirections::west} to quaternion(0,-0.70710677,0,0.70710677)
+
+function getVDirection(direction: text) :: vector:
+	loop "down", "up", "north", "east", "south" and "west":
+		return {-vdirections::%loop-value%} if loop-value = {_direction}
+
+function getQDirection(direction: text) :: quaternion:
+	loop "north", "east", "south" and "west":
+		return {-qdirections::%loop-value%} if loop-value = {_direction}
+
+function getInvertedDirection(d: string) :: string:
+	return "north" if {_d} = "south"
+	return "east" if {_d} = "west"
+	return "south" if {_d} = "north"
+	return "west" if {_d} = "east"

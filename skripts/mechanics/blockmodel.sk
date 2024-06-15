@@ -1,0 +1,97 @@
+# Made by ThebigTijn
+# You are ble to use this skript. Please do credit me :D
+# If you have made something using this i would love to check it out. So MSG on me discord!
+# Discord ID: thebigtijn
+
+# This skript uses some utilities that are also included in the repository.
+
+on load:
+	set {-blockmodel::1} to paper named "&7Blockmodel 1" with lore "" and "&8(Blockmodel)%nl%%nl%&8&kitem-specific-check" with custom model data 1001 with all item flags
+	set {-blockmodel::2} to paper named "&7Blockmodel 2" with lore "" and "&8(Blockmodel)%nl%%nl%&8&kitem-specific-check" with custom model data 1002 with all item flags
+	set {-blockmodel::3} to paper named "&7Blockmodel 3" with lore "" and "&8(Blockmodel)%nl%%nl%&8&kitem-specific-check" with custom model data 1003 with all item flags
+	set {-blockmodel::4} to paper named "&7Blockmodel 4" with lore "" and "&8(Blockmodel)%nl%%nl%&8&kitem-specific-check" with custom model data 1004 with all item flags
+
+command /blockmodels:
+	permission: op
+	trigger:
+		openBlockmodelsUI(player,1)
+
+function openBlockmodelsUI(p: player,page: number = 1):
+	set {_e} to ({_page} - 1)
+	create a gui with virtual chest inventory with 5 rows named "&7%font("BlockModels")% &8| &9%font("Page")% %{_page}%":
+		format gui slot (numbers from 36 to 45) with black stained glass pane named "&8" with all item flags
+		format gui slot (numbers from 0 to 35) with stone button named "&8<?>" with all item flags
+		format gui slot 44 with spectral arrow named "&c%font("Next Page")%":
+			openBlockmodelsUI({_p},({_page} + 1))
+		if {_page} is not 1:
+			format gui slot 36 with spectral arrow named "&c%font("Previous Page")%":
+				openBlockmodelsUI({_p},({_page} - 1))
+		loop 36 times:
+			set {_a} to loop-value
+			format gui slot (loop-value - 1) with returnBlockmodelsItem(loop-value + (36 * {_e})) with lore (lore of returnBlockmodelsItem(loop-value + (36 * {_e})) ? "") and "&9%font("click to take item.")%" with all item flags:
+				give {_p} returnBlockmodelsItem({_a} + (36 * {_e}))
+	open last created gui to {_p}
+
+function returnBlockmodelsItem(id: number) :: item:
+	set {_i} to {-blockmodel::%{_id}%}
+	if {_i} is set:
+		return {_i}
+	else:
+		return {_none}
+
+on right click with paper:
+	"%nbt compound of event-item%" contains "custommodeldata"
+	set {_ray} to ray trace from player with max distance 5
+	set {_hit} to ray trace hit block of {_ray}
+	{_hit} is set
+	set {_face} to ray trace hit blockface of {_ray}
+	set {_e} to location of {_hit}
+	set {_e} to {_e} ~ getVDirection("%{_face}%")
+	set {_look} to getInvertedDirection("%horizontal facing of player%")
+
+	if "%nbt compound of event-item%" contains "item-specific-check":
+		if "%{_face}%" is "down": # this sets which sides you CANT place the blockmodel
+			stop
+		placeModel("example",{_e},"%{_face}%",1001,1,1,0.5,0,{_look},1) # This places the blockmodel
+        placeBarriers({_e},0,0,0,0,0,0) # this places the barrier at only the original spot
+
+	else:
+		stop
+	make player swing their main hand
+
+# This function is very detailed and customizable, also not readable at all.
+# It is doing a lot of stuff. go see for yourself what you are able to do with it.
+# I did NOT create this skript with survival in mind so there is no support (yet)
+# I will redo this skript when i get the time to and clear some stuff up.
+function placeModel(interaction: string, e: location,face: string,cmd: num,height: num = 1,width: num = 1,offset: num = 0,offsettp: num = 0,look: string = "north",id: integer = 1):
+	set {_ee} to {_e} ~ vector(0,sba({_offset}) + {_offsettp},0)
+	spawn item display at {_ee}
+	set {_block} to last spawned entity
+	set display item of {_block} to paper with custom model data {_cmd}
+	if "%{_face}%" is not "south", "up" or "down":
+		set display left rotation of {_block} to getQDirection("%{_face}%")
+	else if "%{_face}%" is not "south":
+		{_look} != "south"
+		set display left rotation of {_block} to getQDirection("%{_look}%")
+	set display translation of {_block} to vector(0,{_offset},0)
+
+	spawn interaction at {_e}
+	set {_ie} to last spawned entity
+	make {_ie} ride {_block}
+	set int tag "custom;%{_interaction}%" of nbt compound of {_ie} to {_id}
+	reset interaction height of {_ie}
+	reset interaction width of {_ie}
+	set interaction height of {_ie} to {_height}
+	set interaction width of {_ie} to {_width}
+
+function placeBarriers(e: location,up: num,down: num,left: num,right: num,front: num,back: num):
+	set {_pos1} to {_e} ~ vector({_left},{_up},{_front})
+	set {_pos2} to {_e} ~ vector(sba({_right}),sba({_down}),sba({_back}))
+	set blocks within {_pos2} and {_pos1} to barrier
+
+on dismount:
+	event-entity = interaction
+	kill event-entity
+
+function sba(n: num) :: num:
+	return abs({_n}) * -1
