@@ -7,6 +7,7 @@ I do not claim all skripts that are in this list.
 - Skript 
 - SkBee
 - skript-reflect
+- skript-gui
 
 ## Required Plugins (If mentioned):
 - skript-yaml
