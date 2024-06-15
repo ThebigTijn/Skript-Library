@@ -12,4 +12,4 @@ I do not claim all skripts that are in this list.
 ## Required Plugins (If mentioned):
 - skript-yaml
 
-### If you are no credited, LMK so i can add you.
+### If you are not credited, LMK so i can add you.
